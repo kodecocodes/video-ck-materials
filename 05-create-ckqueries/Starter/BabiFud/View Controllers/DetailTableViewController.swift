@@ -64,7 +64,7 @@ class DetailTableViewController: UITableViewController {
     mensChangingLabel.alpha = (changingTable == .mens || changingTable == .both) ? 1.0 : 0.5
 
     Task {
-      imageView.image = await establishment.loadCoverPhoto()
+      imageView.image = try await establishment.loadCoverPhoto()
     }
   }
   

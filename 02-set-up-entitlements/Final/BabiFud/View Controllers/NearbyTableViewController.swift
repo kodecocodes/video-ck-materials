@@ -49,16 +49,17 @@ class NearbyTableViewController: UITableViewController {
   }
   
   @objc private func refresh() {
-    Model.currentModel.refresh { error in
-      if let error = error {
+    Task {
+      do {
+        try await Model.current.refresh()
+        tableView.refreshControl?.endRefreshing()
+        reloadSnapshot(animated: true)
+      } catch {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        self.tableView.refreshControl?.endRefreshing()
-        return
+        present(alert, animated: true, completion: nil)
+        tableView.refreshControl?.endRefreshing()
       }
-      self.tableView.refreshControl?.endRefreshing()
-      self.reloadSnapshot(animated: true)
     }
   }
 
@@ -69,7 +70,7 @@ class NearbyTableViewController: UITableViewController {
       let indexPath = tableView.indexPath(for: cell),
       let detailViewController = DetailTableViewController(coder: coder)
       else { return nil }
-    detailViewController.establishment = Model.currentModel.establishments[indexPath.row]
+    detailViewController.establishment = Model.current.establishments[indexPath.row]
     return detailViewController
   }
 }
@@ -87,9 +88,9 @@ extension NearbyTableViewController {
   private func reloadSnapshot(animated: Bool) {
     var snapshot = NSDiffableDataSourceSnapshot<Int, Establishment>()
     snapshot.appendSections([0])
-    snapshot.appendItems(Model.currentModel.establishments)
+    snapshot.appendItems(Model.current.establishments)
     dataSource?.apply(snapshot, animatingDifferences: animated)
-    if Model.currentModel.establishments.isEmpty {
+    if Model.current.establishments.isEmpty {
       let label = UILabel()
       label.text = "No Restaurants Found"
       label.textColor = UIColor.systemGray2
@@ -111,8 +112,6 @@ extension NearbyTableViewController: CLLocationManagerDelegate {
     // Only look at locations within a 0.5 km radius.
     locationManager.distanceFilter = 500.0
     locationManager.delegate = self
-    
-    CLLocationManager.authorizationStatus()
   }
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)  {

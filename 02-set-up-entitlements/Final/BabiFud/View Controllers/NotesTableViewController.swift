@@ -51,17 +51,16 @@ class NotesTableViewController: UITableViewController {
   }
   
   @objc private func refresh() {
-    Note.fetchNotes { result in
-      self.refreshControl?.endRefreshing()
-      switch result {
-      case .failure(let error):
+    Task {
+      do {
+        notes = try await .init()
+      } catch {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
-      case .success(let notes):
-        self.notes = notes
       }
-      self.reloadSnapshot(animated: true)
+      refreshControl?.endRefreshing()
+      reloadSnapshot(animated: true)
     }
   }
 }
@@ -81,8 +80,8 @@ extension NotesTableViewController {
     snapshot.appendSections([0])
     var isEmpty = false
     if let establishment = establishment {
-      snapshot.appendItems(establishment.notes ?? [])
-      isEmpty = (establishment.notes ?? []).isEmpty
+      snapshot.appendItems(establishment.notes)
+      isEmpty = establishment.notes.isEmpty
     } else {
       snapshot.appendItems(notes)
       isEmpty = notes.isEmpty

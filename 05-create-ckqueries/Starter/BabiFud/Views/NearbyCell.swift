@@ -39,7 +39,7 @@ class NearbyCell: UITableViewCell {
       name.text = establishment?.name
 
       Task {
-        placeImageView.image = await establishment?.loadCoverPhoto()
+        placeImageView.image = try await establishment?.loadCoverPhoto()
       }
     }
   }

@@ -80,8 +80,8 @@ extension NotesTableViewController {
     snapshot.appendSections([0])
     var isEmpty = false
     if let establishment = establishment {
-      snapshot.appendItems(establishment.notes ?? [])
-      isEmpty = (establishment.notes ?? []).isEmpty
+      snapshot.appendItems(establishment.notes)
+      isEmpty = establishment.notes.isEmpty
     } else {
       snapshot.appendItems(notes)
       isEmpty = notes.isEmpty

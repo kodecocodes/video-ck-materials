@@ -37,9 +37,9 @@ class NearbyCell: UITableViewCell {
     didSet {
       placeImageView.image = nil
       name.text = establishment?.name
-      establishment?.loadCoverPhoto { [weak self] image in
-        guard let self = self else { return }
-        self.placeImageView.image = image
+
+      Task {
+        placeImageView.image = try await establishment?.loadCoverPhoto()
       }
     }
   }

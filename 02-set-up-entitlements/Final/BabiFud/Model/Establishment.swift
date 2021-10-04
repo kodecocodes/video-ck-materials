@@ -48,13 +48,14 @@ class Establishment {
   let changingTable: ChangingTable
   let kidsMenu: Bool
   let healthyOption: Bool
-  private(set) var notes: [Note]? = nil
+  let notes: [Note]
   
-  init?(record: CKRecord, database: CKDatabase) {
+  init?(record: CKRecord, database: CKDatabase) async throws {
     guard
       let name = record["name"] as? String,
       let location = record["location"] as? CLLocation
-      else { return nil }
+    else { return nil }
+
     id = record.recordID
     self.name = name
     self.location = location
@@ -62,16 +63,17 @@ class Establishment {
     self.database = database
     healthyOption = record["healthyOption"] as? Bool ?? false
     kidsMenu = record["kidsMenu"] as? Bool ?? false
-    if let changingTableValue = record["changingTable"] as? Int,
-      let changingTable = ChangingTable(rawValue: changingTableValue) {
-      self.changingTable = changingTable
-    } else {
-      self.changingTable = .none
-    }
+
+    self.changingTable =
+      (record["changingTable"] as? Int).flatMap(ChangingTable.init)
+      ?? .none
+
+
+    notes = []
   }
-  
-  func loadCoverPhoto(completion: @escaping (_ photo: UIImage?) -> ()) {
-    completion(nil)
+
+  func loadCoverPhoto() async throws -> UIImage? {
+    nil
   }
 }
 

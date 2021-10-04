@@ -29,27 +29,12 @@
 import Foundation
 import CloudKit
 
-class Model {
-  // MARK: - iCloud Info
-  let container: CKContainer
-  let publicDB: CKDatabase
-  let privateDB: CKDatabase
-  
-  // MARK: - Properties
+final class Model {
+  static let current = Model()
+
   private(set) var establishments: [Establishment] = []
-  static var currentModel = Model()
   
-  init() {
-    container = CKContainer.default()
-    publicDB = container.publicCloudDatabase
-    privateDB = container.privateCloudDatabase
-  }
-  
-  @objc func refresh(_ completion: @escaping (Error?) -> Void) {
-    completion(nil)
-  }
-  
-  private func establishments(forQuery query: CKQuery, _ completion: @escaping (Error?) -> Void) {
-    
+  func refresh() async throws {
+
   }
 }

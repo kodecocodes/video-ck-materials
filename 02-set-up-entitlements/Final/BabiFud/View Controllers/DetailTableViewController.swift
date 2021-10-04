@@ -62,9 +62,9 @@ class DetailTableViewController: UITableViewController {
     let changingTable = establishment.changingTable
     womensChangingLabel.alpha = (changingTable == .womens || changingTable == .both) ? 1.0 : 0.5
     mensChangingLabel.alpha = (changingTable == .mens || changingTable == .both) ? 1.0 : 0.5
-    establishment.loadCoverPhoto { [weak self] image in
-      guard let self = self else { return }
-      self.imageView.image = image
+
+    Task {
+      imageView.image = try await establishment.loadCoverPhoto()
     }
   }
   

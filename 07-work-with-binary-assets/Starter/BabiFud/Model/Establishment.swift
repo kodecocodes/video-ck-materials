@@ -68,15 +68,11 @@ class Establishment {
       (record["changingTable"] as? Int).flatMap(ChangingTable.init)
       ?? .none
 
-    if let references = record["notes"] as? [CKRecord.Reference] {
-      notes = try await .init(references: references)
-    } else {
-      notes = []
-    }
+    notes = []
   }
-  
-    nil
+
   func loadCoverPhoto() async throws -> UIImage? {
+    nil
   }
 }
 

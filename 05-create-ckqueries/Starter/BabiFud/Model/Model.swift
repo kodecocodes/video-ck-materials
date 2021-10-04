@@ -35,5 +35,6 @@ final class Model {
   private(set) var establishments: [Establishment] = []
   
   func refresh() async throws {
+
   }
 }

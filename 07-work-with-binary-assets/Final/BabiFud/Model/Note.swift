@@ -29,7 +29,7 @@
 import Foundation
 import CloudKit
 
-class Note {
+final class Note {
   private let id: CKRecord.ID
   private(set) var noteLabel: String?
   let establishmentReference: CKRecord.Reference?

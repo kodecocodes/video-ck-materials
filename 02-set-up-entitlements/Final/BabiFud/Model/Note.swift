@@ -29,7 +29,7 @@
 import Foundation
 import CloudKit
 
-class Note {
+final class Note {
   private let id: CKRecord.ID
   private(set) var noteLabel: String?
   let establishmentReference: CKRecord.Reference?
@@ -39,9 +39,15 @@ class Note {
     noteLabel = record["text"] as? String
     establishmentReference = record["establishment"] as? CKRecord.Reference
   }
-  
-  static func fetchNotes(_ completion: @escaping (Result<[Note], Error>) -> Void) {
-    completion(.success([]))
+}
+
+extension Array where Element == Note {
+  init() async throws {
+    self = []
+  }
+
+  init(references: [CKRecord.Reference]) async throws {
+    self = []
   }
 }
 
